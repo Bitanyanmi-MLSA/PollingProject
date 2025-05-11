@@ -10,16 +10,17 @@
     <div class="container">
         <h1>Polling Web App</h1>
         <div id="poll">
-            <p id="question">What is your favorite programming language?</p>
+            <p id="question">Who is your favorite candidate?</p>
             <select id="pollOptions" style="margin-top: 10px; width: 100%; padding: 8px;">
                 <!-- Options will be dynamically added here -->
             </select>
+            <p id="notification" style="color: red; display: none; margin-top: 10px;">Please select an option before submitting your vote.</p>
             <button id="submitVote">Submit Vote</button>
         </div>
         <table id="voteTable" style="margin-top: 20px; width: 100%; border-collapse: collapse; display: none;">
             <thead>
                 <tr>
-                    <th style="border: 1px solid #ddd; padding: 8px;">Option</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Candidates</th>
                     <th style="border: 1px solid #ddd; padding: 8px;">Votes</th>
                 </tr>
             </thead>

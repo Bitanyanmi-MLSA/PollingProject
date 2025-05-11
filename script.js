@@ -1,7 +1,7 @@
 const pollData = {
-    question: "What is your favorite programming language?",
+    question: "Who is your favorite candidate?",
     options: ["Prince", "Benard", "Diego", "Justice"],
-    votes: [0, 0, 0, 0]
+    votes: [0, 0, 0, 0,]
 };
 
 const questionElement = document.getElementById("question");
@@ -47,6 +47,7 @@ backToPollFromTableButton.addEventListener("click", () => {
     document.getElementById("voteTable").style.display = "none";
     backToPollFromTableButton.style.display = "none";
     document.getElementById("poll").style.display = "block";
+    document.getElementById("pollOptions").selectedIndex = 0; // Reset dropdown to default option
     saveCurrentView("poll");
 });
 
@@ -106,14 +107,16 @@ renderPoll();
 
 submitVoteButton.addEventListener("click", () => {
     const selectedOption = document.getElementById("pollOptions").value;
+    const notification = document.getElementById("notification");
     if (selectedOption !== "") {
         const voteIndex = parseInt(selectedOption);
         pollData.votes[voteIndex]++;
         saveVotesToLocalStorage();
         updateVoteTable();
         showResults();
+        notification.style.display = "none"; // Hide notification on successful submission
     } else {
-        alert("Please select an option before submitting your vote.");
+        notification.style.display = "block"; // Show notification if no option is selected
     }
 });
 
