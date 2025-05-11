@@ -91,6 +91,36 @@ function loadCurrentView() {
     return localStorage.getItem("currentView") || "poll";
 }
 
+// Fetch poll data from the backend
+async function fetchPollData() {
+    const response = await fetch("/poll");
+    if (response.ok) {
+        const data = await response.json();
+        pollData.question = data.question;
+        pollData.options = data.options;
+        pollData.votes = data.votes;
+        renderPoll();
+    } else {
+        console.error("Failed to fetch poll data.");
+    }
+}
+
+// Submit a vote to the backend
+async function submitVoteToBackend(optionIndex) {
+    const response = await fetch("/vote", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ option_index: optionIndex }),
+    });
+    if (response.ok) {
+        console.log("Vote submitted successfully.");
+    } else {
+        console.error("Failed to submit vote.");
+    }
+}
+
 // Load the correct view on page load
 window.addEventListener("load", () => {
     const currentView = loadCurrentView();
@@ -99,19 +129,20 @@ window.addEventListener("load", () => {
     } else {
         document.getElementById("poll").style.display = "block";
     }
+    fetchPollData();
 });
 
 // Load votes from local storage on page load
 loadVotesFromLocalStorage();
 renderPoll();
 
-submitVoteButton.addEventListener("click", () => {
+submitVoteButton.addEventListener("click", async () => {
     const selectedOption = document.getElementById("pollOptions").value;
     const notification = document.getElementById("notification");
     if (selectedOption !== "") {
         const voteIndex = parseInt(selectedOption);
-        pollData.votes[voteIndex]++;
-        saveVotesToLocalStorage();
+        await submitVoteToBackend(voteIndex);
+        await fetchPollData(); // Refresh poll data after voting
         updateVoteTable();
         showResults();
         notification.style.display = "none"; // Hide notification on successful submission
